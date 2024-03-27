@@ -13,6 +13,8 @@ def main():
   f = Value(-2.0, 'f')
   L = label(d*f, 'L')
 
+  L.backward()
+
   graph = draw_dot(L, "TB")
 
   generate_computation_graph(graph)

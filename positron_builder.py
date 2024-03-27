@@ -1,3 +1,5 @@
+from __future__ import annotations
+from typing import List, Set
 import math
 
 class Value:
@@ -36,8 +38,8 @@ class Value:
     )
 
     def backward():
-      self.grad = 1.0 * result.gradient
-      result.grad = 1.0 * result.gradient
+      self.gradient += 1.0 * result.gradient
+      other.gradient += 1.0 * result.gradient
 
     result._backward = backward
 
@@ -51,8 +53,8 @@ class Value:
     )
 
     def backward():
-      self.grad = other.data * result.grad
-      other.grad = self.data * result.grad
+      self.gradient += other.data * result.gradient
+      other.gradient += self.data * result.gradient
 
     result._backward = backward
 
@@ -68,11 +70,39 @@ class Value:
     )
 
     def backward():
-      self.grad = (1 - t**2) * result.grad
+      self.gradient += (1 - t**2) * result.gradient
 
     result._backward = backward
 
     return result
+
+  def backward(self):
+    self.gradient = 1.0
+
+    nodes = self._get_parents_in_reverse_computational_order()
+
+    for node in nodes:
+      node._backward()
+
+  def _get_parents_in_reverse_computational_order(self):
+    nodes = []
+    visited = set()
+
+    Value._get_parents_in_reverse_computational_order_callback(self, nodes, visited)
+
+    return reversed(nodes)
+
+
+  def _get_parents_in_reverse_computational_order_callback(value: Value, nodes: List[Value], visited: Set[Value]) -> List[Value]:
+    if value in visited:
+      return
+
+    visited.add(value)
+
+    for v in value._prev:
+      Value._get_parents_in_reverse_computational_order_callback(v, nodes, visited)
+
+    nodes.append(value)
 
 
 def label(value: Value, label: str) -> Value:
