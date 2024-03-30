@@ -9,7 +9,13 @@ def main():
   Here I play with the different capabilities of the core libraries
   """
   # e1_show_basics_of_value_operations()
-  e2_create_a_raw_aritficial_neuron()
+  # e2_create_a_raw_aritficial_neuron()
+  e3_play_with_addition_and_substraction()
+
+def e3_play_with_addition_and_substraction():
+  a = Value(2.0)
+  b = Value(3.0)
+  print(b - a)
 
 def e2_create_a_raw_aritficial_neuron():
   # Inputs x1, x2

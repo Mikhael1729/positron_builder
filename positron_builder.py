@@ -2,8 +2,6 @@ from __future__ import annotations
 from typing import List, Set, Union, TypeAlias
 import math
 
-ValueType: TypeAlias = Value | int | float
-
 class Value:
   """
   Value encodes the data and computation information of how the given result or
@@ -55,6 +53,18 @@ class Value:
 
     return result
 
+  def __neg__(self) -> Value:
+    """
+    Overrides the operation -self
+    """
+    return self * -1
+
+  def __sub__(self, other: ValueType) -> Value:
+    """
+    Overrides self - other
+    """
+    return self + (-other)
+
   def __mul__(self, other: ValueType) -> Value:
     """
     Overrides the operation self * other
@@ -80,6 +90,42 @@ class Value:
     Overrides the operation other * self to behave as self * other
     """
     return self * other
+  
+  def __pow__(self, other: int | float) -> Value:
+    assert isinstance(other, (int, float)), "only supporting int/float numbers for now"
+
+    result = Value(
+      data = self.data**oher.data,
+      parents = (self, other),
+      _operator = f"**{other}"
+    )
+
+    def backward():
+      self.gradient += (other * self.data **(other-1)) * result.gradient
+
+    self._backward = backward
+
+  def __truediv__(self, other: ValueType) -> Value:
+    """
+    Override division operation in terms of factors
+
+    result = self / other
+    result = self * (1 / b)
+    result = self * (b**-1)
+    """
+    return self * other**-1
+
+  def exp(self) -> Value:
+    result = Value(
+      data = math.exp(self.data),
+      parents = (self, ),
+      _operator = 'exp'
+    )
+
+    def backward():
+      self.gradient += self.data * result.gradient
+
+    result._backward = backward
 
   def tanh(self: Value) -> Value:
     t = (math.exp(2 * self.data) - 1) / (math.exp(2 * self.data) + 1)
@@ -96,19 +142,6 @@ class Value:
     result._backward = backward
 
     return result
-
-  def exp(self) -> Value:
-    result = Value(
-      data = math.exp(self.data),
-      parents = (self, ),
-      _operator = 'exp'
-    )
-
-    def backward():
-      self.gradient += self.data * result.gradient
-
-    result._backward = backward
-
 
   def backward(self):
     self.gradient = 1.0
@@ -137,6 +170,8 @@ class Value:
       Value._get_parents_in_reverse_computational_order_callback(v, nodes, visited)
 
     nodes.append(value)
+
+ValueType: TypeAlias = Value | int | float
 
 def parse(other: ValueType) -> Value:
   return other if isinstance(other, Value) else Value(other)
