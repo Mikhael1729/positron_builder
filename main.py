@@ -5,6 +5,40 @@ from typing import Tuple, Set
 import os
 
 def main():
+  """
+  Here I play with the different capabilities of the core libraries
+  """
+  # e1_show_basics_of_value_operations()
+  e2_create_a_raw_aritficial_neuron()
+
+def e2_create_a_raw_aritficial_neuron():
+  # Inputs x1, x2
+  x1 = Value(2.0, 'x1')
+  x2 = Value(0.0, 'x2')
+
+  # Weights
+  w1 = Value(-3.0, 'w1')
+  w2 = Value(1.0, 'w2')
+
+  # Bias of the neuron
+  b = Value(6.8813735870195432, 'b') # The reason of the large number is to allow nice values
+  
+  # Forward propagation
+  y1 = label(x1 * w1, 'z1')
+  y2 = label(x2 * w2, 'z2')
+  y = label(y1 + y2, 'y')
+
+  z = label(y + b, 'z')
+
+  a = label(z.tanh(), 'a') # Activation function
+
+  # Visualize computational graph
+  graph = draw_dot(a, 'TB')
+  generate_computation_graph(graph)
+  
+
+def e1_show_basics_of_value_operations():
+  # Form computation
   a = Value(2.0, 'a')
   b = Value(-3.0, 'b')
   c = Value(10.0, 'c')
@@ -13,11 +47,13 @@ def main():
   f = Value(-2.0, 'f')
   L = label(d*f, 'L')
 
+  # Perform backward pass
   L.backward()
 
+  # Visualize computation (forward and backward pass)
   graph = draw_dot(L, "TB")
-
   generate_computation_graph(graph)
+
 
 def trace(root: Value):
   """
