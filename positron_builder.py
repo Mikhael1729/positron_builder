@@ -76,6 +76,19 @@ class Value:
 
     return result
 
+  def exp(self) -> Value:
+    result = Value(
+      data = math.exp(self.data),
+      parents = (self, ),
+      _operator = 'exp'
+    )
+
+    def backward():
+      self.gradient += self.data * result.gradient
+
+    result._backward = backward
+
+
   def backward(self):
     self.gradient = 1.0
 
