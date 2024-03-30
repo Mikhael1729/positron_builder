@@ -1,6 +1,8 @@
 from __future__ import annotations
-from typing import List, Set
+from typing import List, Set, Union, TypeAlias
 import math
+
+ValueType: TypeAlias = Value | int | float
 
 class Value:
   """
@@ -13,7 +15,7 @@ class Value:
       (computational node like +, *, etc.)
                           
   """
-  def __init__(self, data, label='', parents=(), _operator=''):
+  def __init__(self, data: int | float, label='', parents=(), _operator=''):
     self.data = data
     self._prev = set(parents)
     self.gradient = 0.0 # This is computed in the backwards pass
@@ -22,6 +24,9 @@ class Value:
     self.label = label
 
   def __repr__(self) -> str:
+    """
+    Overrides the parsing to string of Value
+    """
     labels = [child.label for child in self._prev]
     if len(labels) == 2:
       parents = (labels[0], labels[1])
@@ -30,7 +35,12 @@ class Value:
 
     return f'Value(data={self.data}, label="{self.label}", parents={parents})'
 
-  def __add__(self, other) -> Value:
+  def __add__(self, other: ValueType) -> Value:
+    """
+    Overrides the operation self + other
+    """
+    other = parse(other)
+
     result = Value(
       data = self.data + other.data,
       parents = (self, other),
@@ -45,7 +55,12 @@ class Value:
 
     return result
 
-  def __mul__(self, other) -> Value:
+  def __mul__(self, other: ValueType) -> Value:
+    """
+    Overrides the operation self * other
+    """
+    other = parse(other)
+
     result = Value(
       data = self.data * other.data,
       parents = (self, other),
@@ -60,7 +75,13 @@ class Value:
 
     return result
 
-  def tanh(self) -> Value:
+  def __rmul__(self, other: ValueType) -> Value:
+    """
+    Overrides the operation other * self to behave as self * other
+    """
+    return self * other
+
+  def tanh(self: Value) -> Value:
     t = (math.exp(2 * self.data) - 1) / (math.exp(2 * self.data) + 1)
 
     result = Value(
@@ -117,6 +138,8 @@ class Value:
 
     nodes.append(value)
 
+def parse(other: ValueType) -> Value:
+  return other if isinstance(other, Value) else Value(other)
 
 def label(value: Value, label: str) -> Value:
     value.label = label
