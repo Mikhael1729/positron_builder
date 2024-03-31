@@ -125,7 +125,7 @@ class Value:
     )
 
     def backward():
-      self.gradient += self.data * result.gradient
+      self.gradient += result.data * result.gradient
 
     result._backward = backward
 
