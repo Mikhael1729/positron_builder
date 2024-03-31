@@ -95,8 +95,8 @@ class Value:
     assert isinstance(other, (int, float)), "only supporting int/float numbers for now"
 
     result = Value(
-      data = self.data**oher.data,
-      parents = (self, other),
+      data = self.data**other,
+      parents = (self, ), # Other is not included, because the exponent is used a as a constant which do not affect differentiation
       _operator = f"**{other}"
     )
 
@@ -104,6 +104,8 @@ class Value:
       self.gradient += (other * self.data **(other-1)) * result.gradient
 
     self._backward = backward
+
+    return result
 
   def __truediv__(self, other: ValueType) -> Value:
     """
@@ -126,6 +128,8 @@ class Value:
       self.gradient += self.data * result.gradient
 
     result._backward = backward
+
+    return result
 
   def tanh(self: Value) -> Value:
     t = (math.exp(2 * self.data) - 1) / (math.exp(2 * self.data) + 1)
