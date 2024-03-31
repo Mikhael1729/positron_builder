@@ -10,7 +10,38 @@ def main():
   """
   # e1_show_basics_of_value_operations()
   # e2_create_a_raw_aritficial_neuron()
-  e3_play_with_addition_and_substraction()
+  # e3_play_with_addition_and_substraction()
+  e4_create_a_raw_aritficial_neuron()
+
+
+def e4_create_a_raw_aritficial_neuron():
+  # Inputs x1, x2
+  x1 = Value(2.0, 'x1')
+  x2 = Value(0.0, 'x2')
+
+  # Weights
+  w1 = Value(-3.0, 'w1')
+  w2 = Value(1.0, 'w2')
+
+  # Bias of the neuron
+  b = Value(6.8813735870195432, 'b') # The reason of the large number is to allow nice values
+  
+  # Forward propagation
+  y1 = label(x1 * w1, 'z1')
+  y2 = label(x2 * w2, 'z2')
+  y = label(y1 + y2, 'y')
+
+  z = label(y + b, 'z')
+
+  # Compute tanh
+  e = 2 * z.exp()
+  a = label((e - 1) / (e + 1), 'a')
+
+  a.backward()
+
+  # Visualize computational graph
+  graph = draw_dot(a, 'TB')
+  generate_computation_graph(graph)
 
 def e3_play_with_addition_and_substraction():
   a = Value(2.0)
@@ -37,6 +68,8 @@ def e2_create_a_raw_aritficial_neuron():
   z = label(y + b, 'z')
 
   a = label(z.tanh(), 'a') # Activation function
+
+  a.backward()
 
   # Visualize computational graph
   graph = draw_dot(a, 'TB')
