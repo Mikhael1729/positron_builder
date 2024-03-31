@@ -34,7 +34,7 @@ def e4_create_a_raw_aritficial_neuron():
   z = label(y + b, 'z')
 
   # Compute tanh
-  e = 2 * z.exp()
+  e = (2 * z).exp()
   a = label((e - 1) / (e + 1), 'a')
 
   a.backward()
