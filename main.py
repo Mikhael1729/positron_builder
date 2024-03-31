@@ -27,8 +27,8 @@ def e4_create_a_raw_aritficial_neuron():
   b = Value(6.8813735870195432, 'b') # The reason of the large number is to allow nice values
   
   # Forward propagation
-  y1 = label(x1 * w1, 'z1')
-  y2 = label(x2 * w2, 'z2')
+  y1 = label(x1 * w1, 'y1')
+  y2 = label(x2 * w2, 'y2')
   y = label(y1 + y2, 'y')
 
   z = label(y + b, 'z')
@@ -40,7 +40,7 @@ def e4_create_a_raw_aritficial_neuron():
   a.backward()
 
   # Visualize computational graph
-  graph = draw_dot(a, 'TB')
+  graph = draw_dot(a, 'LR')
   generate_computation_graph(graph)
 
 def e3_play_with_addition_and_substraction():

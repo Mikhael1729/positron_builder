@@ -103,7 +103,7 @@ class Value:
     def backward():
       self.gradient += (other * self.data **(other-1)) * result.gradient
 
-    self._backward = backward
+    result._backward = backward
 
     return result
 
