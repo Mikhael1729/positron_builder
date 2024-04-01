@@ -1,31 +1,51 @@
 from __future__ import annotations
-from typing import List, Set, Union, TypeAlias
+from typing import List, Set, Tuple, TypeAlias
 import math
 
 class Value:
   """
-  Value encodes the data and computation information of how the given result or
+  Value is encodes the data and computation information of how the given result or
   value was obtained.
-
-  Attributes:
-    - _backward (Callable[None, None]): A lambda function that  sets the value
-      for the gradients of the two values involved in a given operation
-      (computational node like +, *, etc.)
-                          
   """
-  def __init__(self, data: int | float, label='', parents=(), _operator=''):
+  def __init__(self, data: int | float, label='', parents: Tuple[Value]=(), _operator=''):
     self.data = data
-    self._prev = set(parents)
-    self.gradient = 0.0 # This is computed in the backwards pass
-    self._backward = lambda: None
-    self._operator = _operator
+    """
+    An scalar value encoding the information in the given value.
+    """
+
     self.label = label
+    """
+    A text that can label a given value (mainly used for debugging)
+    """
+
+    self.gradient = 0.0 # This is computed in the backwards pass
+    """
+    This value is computed when _backward gets called. It stores the gradient for
+    the given value.
+    """
+
+    self._operator = _operator
+    """
+    Indicates the operator used in the operation that resulted in the given value.
+    If the given value is not the result of an operation, this value is empty.
+    """
+
+    self._parents: Set[Value] = set(parents)
+    """
+    Contains the parent operands of the given value if any
+    """
+
+    self._backward = lambda: None
+    """
+    A function that sets the value for the gradients of the Value operands involved
+    in a given operation (computational node like +, *, etc.).
+    """
 
   def __repr__(self) -> str:
     """
-    Overrides the parsing to string of Value
+    Overrides the string parsing operation for Value
     """
-    labels = [child.label for child in self._prev]
+    labels = [child.label for child in self._parents]
     if len(labels) == 2:
       parents = (labels[0], labels[1])
     else:
@@ -35,7 +55,7 @@ class Value:
 
   def __add__(self, other: ValueType) -> Value:
     """
-    Overrides the operation self + other
+    Overrides the addition operation for value (self + other)
     """
     other = parse(other)
 
@@ -55,19 +75,19 @@ class Value:
 
   def __neg__(self) -> Value:
     """
-    Overrides the operation -self
+    Overrides the negation operation for value (-self)
     """
     return self * -1
 
   def __sub__(self, other: ValueType) -> Value:
     """
-    Overrides self - other
+    Overrides the subtraction operation for Value (self - other)
     """
     return self + (-other)
 
   def __mul__(self, other: ValueType) -> Value:
     """
-    Overrides the operation self * other
+    Overrides the multiplication operation for Value (self * other)
     """
     other = parse(other)
 
@@ -87,11 +107,16 @@ class Value:
 
   def __rmul__(self, other: ValueType) -> Value:
     """
-    Overrides the operation other * self to behave as self * other
+    Overrides the reverse multiplication (when other is other type). In short,
+    it allows the operation other * self to behave self * other
     """
     return self * other
   
   def __pow__(self, other: int | float) -> Value:
+    """
+    Overrides the exponent operation for Value. It only supports numeric values as
+    exponents
+    """
     assert isinstance(other, (int, float)), "only supporting int/float numbers for now"
 
     result = Value(
@@ -109,15 +134,19 @@ class Value:
 
   def __truediv__(self, other: ValueType) -> Value:
     """
-    Override division operation in terms of factors
+    Overrides the division operation of Value in terms of factors
 
-    result = self / other
-    result = self * (1 / b)
-    result = self * (b**-1)
+    derivation:\n
+    result = self / other\n
+    result = self * (1 / b)\n
+    result = self * (b**-1)\n
     """
     return self * other**-1
 
   def exp(self) -> Value:
+    """
+    Operator that applies the exponential function with Value (`e^(self.data)`)
+    """
     result = Value(
       data = math.exp(self.data),
       parents = (self, ),
@@ -132,6 +161,9 @@ class Value:
     return result
 
   def tanh(self: Value) -> Value:
+    """
+    Operator that applies the tanh function to Value (`tanh(self.data)`)
+    """
     t = (math.exp(2 * self.data) - 1) / (math.exp(2 * self.data) + 1)
 
     result = Value(
@@ -148,6 +180,9 @@ class Value:
     return result
 
   def backward(self):
+    """
+    Computes the gradient for the given value
+    """
     self.gradient = 1.0
 
     nodes = self._get_parents_in_reverse_computational_order()
@@ -170,7 +205,7 @@ class Value:
 
     visited.add(value)
 
-    for v in value._prev:
+    for v in value._parents:
       Value._get_parents_in_reverse_computational_order_callback(v, nodes, visited)
 
     nodes.append(value)
@@ -181,5 +216,9 @@ def parse(other: ValueType) -> Value:
   return other if isinstance(other, Value) else Value(other)
 
 def label(value: Value, label: str) -> Value:
-    value.label = label
-    return value
+  """
+  A helper function to allow you to easily (in a single line) assign a label to a
+  given value
+  """
+  value.label = label
+  return value

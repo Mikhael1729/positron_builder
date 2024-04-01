@@ -105,7 +105,7 @@ def trace(root: Value):
     if value not in nodes:
       nodes.add(value)
 
-      for child in value._prev:
+      for child in value._parents:
         edges.add((child, value))
         build(child)
 
