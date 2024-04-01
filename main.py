@@ -1,4 +1,4 @@
-from positron_builder import Value, label
+from value import Value, label
 from graphviz import Digraph
 from typing import Tuple, Set
 
