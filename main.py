@@ -25,7 +25,7 @@ def e5_mlp_neural_network_architecture():
   # The "input layer" is indicated apart in the first parameter
   positron = MLP(3, [4, 4, 1])
 
-  # These are the inputs applied to the first layer of the network
+  # These are the inputs applied to the first layer (A) of the network
   inputs = [2.0, 3.0, -1.0]
 
   # It perform a forward pass in the network
@@ -33,8 +33,8 @@ def e5_mlp_neural_network_architecture():
   print(thought)
 
   # Visualize the network
-  graph = draw_dot(thought, 'LR')
-  generate_computation_graph(graph)
+  graph = generate_computation_graph_from_node(thought, 'LR')
+  draw_computation_graph(graph)
 
 
 def e4_create_a_raw_aritficial_neuron():
@@ -63,8 +63,8 @@ def e4_create_a_raw_aritficial_neuron():
   a.backward()
 
   # Visualize computational graph
-  graph = draw_dot(a, 'LR')
-  generate_computation_graph(graph)
+  graph = generate_computation_graph_from_node(a, 'LR')
+  draw_computation_graph(graph)
 
 def e3_play_with_addition_and_substraction():
   a = Value(2.0)
@@ -95,8 +95,8 @@ def e2_create_a_raw_aritficial_neuron():
   a.backward()
 
   # Visualize computational graph
-  graph = draw_dot(a, 'TB')
-  generate_computation_graph(graph)
+  graph = generate_computation_graph_from_node(a, 'TB')
+  draw_computation_graph(graph)
   
 
 def e1_show_basics_of_value_operations():
@@ -113,8 +113,8 @@ def e1_show_basics_of_value_operations():
   L.backward()
 
   # Visualize computation (forward and backward pass)
-  graph = draw_dot(L, "TB")
-  generate_computation_graph(graph)
+  graph = generate_computation_graph_from_node(L, "TB")
+  draw_computation_graph(graph)
 
 
 def trace(root: Value):
@@ -136,7 +136,7 @@ def trace(root: Value):
   
   return nodes, edges
 
-def draw_dot(root, drawing_direction='TB'):
+def generate_computation_graph_from_node(root, drawing_direction='TB'):
   """
   Draw the computation graph from the given node
   """
@@ -162,7 +162,7 @@ def draw_dot(root, drawing_direction='TB'):
 
   return dot
 
-def generate_computation_graph(dot, output_filename="./visualization/computation_graph", view=True):
+def draw_computation_graph(dot, output_filename="./visualization/computation_graph", view=True):
   unique_filename = output_filename
   counter = 1
 
