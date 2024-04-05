@@ -1,3 +1,4 @@
+from mlp import MLP
 from value import Value, label
 from graphviz import Digraph
 from typing import Tuple, Set
@@ -11,7 +12,29 @@ def main():
   # e1_show_basics_of_value_operations()
   # e2_create_a_raw_aritficial_neuron()
   # e3_play_with_addition_and_substraction()
-  e4_create_a_raw_aritficial_neuron()
+  # e4_create_a_raw_aritficial_neuron()
+  e5_mlp_neural_network_architecture()
+
+def e5_mlp_neural_network_architecture():
+  # Creates a neural network with 3 layers:
+  # 
+  # 1. Hidden layer A containing 4 neurons
+  # 2. Hidden layer B containing 4 neurons
+  # 3. Output layer containing 1 neuron
+  #
+  # The "input layer" is indicated apart in the first parameter
+  positron = MLP(3, [4, 4, 1])
+
+  # These are the inputs applied to the first layer of the network
+  inputs = [2.0, 3.0, -1.0]
+
+  # It perform a forward pass in the network
+  thought = positron(inputs)
+  print(thought)
+
+  # Visualize the network
+  graph = draw_dot(thought, 'LR')
+  generate_computation_graph(graph)
 
 
 def e4_create_a_raw_aritficial_neuron():
