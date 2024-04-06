@@ -19,3 +19,11 @@ class Neuron:
     result = sum((v * w for v, w in input_weight_pairs), self.bias)
 
     return result.tanh()
+
+  def parameters(self) -> List[Value]:
+    """
+    Returns all the tunable parts of the neuron model (the weights and bias).
+    You can use them to tune let's say a network of neurons to perform
+    specific tasks
+    """
+    return self.weights + [self.bias]

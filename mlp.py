@@ -1,4 +1,5 @@
 from layer import Layer
+from value import Value
 from typing import List
 
 class MLP:
@@ -12,6 +13,13 @@ class MLP:
       inputs = layer(inputs)
     
     return inputs
+  
+  def parameters(self) -> List[Value]:
+    """
+    Returns the list containing all the parameteres inside
+    each layer of the network
+    """
+    return [p for l in self.layers for p in l.parameters()]
     
 if __name__ == "__main__":
   positron = MLP(3, [4, 4, 1])

@@ -13,7 +13,14 @@ def main():
   # e2_create_a_raw_aritficial_neuron()
   # e3_play_with_addition_and_substraction()
   # e4_create_a_raw_aritficial_neuron()
-  e5_mlp_neural_network_architecture()
+  # e5_mlp_neural_network_architecture()
+  e6_testing_parameters()
+
+def e6_testing_parameters():
+  positron = MLP(3, [4, 4, 1])
+  for (i, parameter) in enumerate(positron.parameters()):
+    print(f"{i + 1}: {parameter}")
+
 
 def e5_mlp_neural_network_architecture():
   # Creates a neural network with 3 layers:
