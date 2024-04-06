@@ -14,7 +14,62 @@ def main():
   # e3_play_with_addition_and_substraction()
   # e4_create_a_raw_aritficial_neuron()
   # e5_mlp_neural_network_architecture()
-  e6_testing_parameters()
+  # e6_testing_parameters()
+  # e7_predict_results()
+  e8_one_iteration_of_optimization()
+
+def e8_one_iteration_of_optimization():
+  # Input data
+  X = [
+    [2.0, 3.0, -1.0],
+    [3.0, -1.0, 0.5],
+    [0.5, 1.0, 1.0],
+    [1.0, 1.0, -1.0],
+  ]
+
+  # Expected outputs
+  Y = [1.0, -1.0, -1.0, 1.0]
+
+  # Building network
+  positron = MLP(3, [4, 4, 1])
+
+  # --- From here repeat until you know you hit the target
+  # Predicted results
+  P = [positron(x) for x in X]
+
+  # Compute loss of results
+  loss: Value = sum((p - y)**2 for y, p in zip(Y, P))
+
+  # Compute the gradients of the network with respect to the loss
+  loss.backward()
+
+  # Tune the data of the parameters according to the gradient information
+  for parameter in positron.parameters():
+    parameter.data += -0.01 * parameter.gradient # We are updating it to go at the contrary direction of the loss (that's the reason of the -)
+  # --- here
+
+  print(P)
+
+def e7_predict_results():
+  # Input data
+  X = [
+    [2.0, 3.0, -1.0],
+    [3.0, -1.0, 0.5],
+    [0.5, 1.0, 1.0],
+    [1.0, 1.0, -1.0],
+  ]
+
+  # Expected outputs
+  Y = [1.0, -1.0, -1.0, 1.0]
+
+  # Building network
+  positron = MLP(3, [4, 4, 1])
+
+  # Predicted results
+  P = [positron(x) for x in X]
+
+  for value in P:
+    print(value)
 
 def e6_testing_parameters():
   positron = MLP(3, [4, 4, 1])
