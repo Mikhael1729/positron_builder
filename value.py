@@ -73,6 +73,9 @@ class Value:
 
     return result
 
+  def __radd__(self, other: ValueType):
+    return self + other
+
   def __neg__(self) -> Value:
     """
     Overrides the negation operation for value (-self)
