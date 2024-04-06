@@ -10,7 +10,7 @@ class Neuron:
     self.weights = [Value(random.uniform(-1, 1)) for _ in range (input_size)]
     self.bias = Value(random.uniform(-1, 1))
     
-  def __call__(self, input_values: List[float]) -> float:
+  def __call__(self, input_values: List[float]) -> Value:
     """
     Performs the dot product of `input_values` and `self.weights`, apply
     the bias and to the result of the addition applies the activation function.

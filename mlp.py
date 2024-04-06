@@ -8,7 +8,7 @@ class MLP:
 
     self.layers = [Layer(sizes[i], sizes[i+1]) for i in range(len(layer_sizes))]
 
-  def __call__(self, inputs: List[float]):
+  def __call__(self, inputs: List[float]) -> List[Value] | Value:
     for layer in self.layers:
       inputs = layer(inputs)
     
