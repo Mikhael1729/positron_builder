@@ -16,7 +16,34 @@ def main():
   # e5_mlp_neural_network_architecture()
   # e6_testing_parameters()
   # e7_predict_results()
-  e8_one_iteration_of_optimization()
+  # e8_one_iteration_of_optimization()
+  e9_complete_training_example()
+
+def e9_complete_training_example():
+  # Input data
+  X = [
+    [2.0, 3.0, -1.0],
+    [3.0, -1.0, 0.5],
+    [0.5, 1.0, 1.0],
+    [1.0, 1.0, -1.0],
+  ]
+
+  # Expected outputs
+  Y = [1.0, -1.0, -1.0, 1.0]
+
+  # Building network
+  positron = MLP(3, [4, 4, 1])
+
+  # Train the network
+  positron.train(X, Y, 300, 0.1)
+
+  print("\nRESULTS:\n")
+
+  # Test the network
+  results = positron.predict(X)
+
+  for result in results:
+    print(result)
 
 def e8_one_iteration_of_optimization():
   # Input data
