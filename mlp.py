@@ -20,6 +20,35 @@ class MLP:
     each layer of the network
     """
     return [p for l in self.layers for p in l.parameters()]
+
+  def predict(self, batch: List[float]) -> List[Value]:
+    return [self(sample) for sample in batch]
+  
+  def train(self, batch: List[float], expected_values: List[float], iterations: int, step_size: float, debug=True):
+    for i in range(iterations):
+      predicted_values = [self(sample) for sample in batch]
+
+      # Compute loss of results
+      loss: Value = sum((p - y)**2 for y, p in zip(expected_values, predicted_values))
+
+      if debug:
+        print(f"{i + 1}: {loss.data}")
+
+      # Compute the gradients of the network with respect to the loss
+      self.reset_parameters_gradients()
+      loss.backward()
+
+      # Tune the data of the parameters according to the gradient information
+      for parameter in self.parameters():
+        parameter.data += -step_size * parameter.gradient # We are updating it to go at the contrary direction of the loss (that's the reason of the -)
+
+  def reset_parameters_gradients(self):
+    """
+    Resets the gradients of each parameter in the network. It is useful
+    for training, to avoid affecting new calculations with past data
+    """
+    for parameter in self.parameters():
+      parameter.gradient = 0.0
     
 if __name__ == "__main__":
   positron = MLP(3, [4, 4, 1])
