@@ -2,7 +2,7 @@
 <img src="./images/positron_builder_icon.png" alt="Positron builder logo" width=100>
 </p>
 
-<p align="center"><strong>Positron builder</strong></b>
+<p align="center"><strong>Positron Builder</strong></b>
 
 <br />
 
