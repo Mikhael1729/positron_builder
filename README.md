@@ -23,7 +23,11 @@ X = [
 # Expected outputs
 Y = [1.0, -1.0, -1.0, 1.0]
 
-# Building network
+# Build an Multi-Layer Perceptron with 4 layers:
+# layer 1: 3 neurons (input layer)
+# layer 2: 4 neurons (hidden layer)
+# layer 3: 4 neurons (hidden layer)
+# layer 4: 1 neuron (output layer)
 positron = MLP(3, [4, 4, 1])
 
 # Train the network
@@ -63,3 +67,9 @@ Value(data=-0.9848297251099126, label="", parents=())
 Value(data=-0.9827992534310097, label="", parents=())
 Value(data=0.9812369924980958, label="", parents=())
 ```
+
+This would be the visualization of the MLP created:
+
+<p align="center">
+<img src="./images/mlp_example.png" width=600>
+</p>
