@@ -182,6 +182,26 @@ class Value:
 
     return result
 
+
+  def sigmoid(self: Value) -> Value:
+    """
+    Operator that applies the tanh function to Value (`tanh(self.data)`)
+    """
+    s = 1 / (1 + math.exp(-self.data))
+
+    result = Value(
+      data = s,
+      parents = (self, ),
+      _operator = 'sigmoid'
+    )
+
+    def backward():
+      self.gradient += (s * (1 - s)) * result.gradient
+
+    result._backward = backward
+
+    return result
+
   def backward(self):
     """
     Computes the gradient for the given value
