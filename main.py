@@ -17,7 +17,44 @@ def main():
   # e6_testing_parameters()
   # e7_predict_results()
   # e8_one_iteration_of_optimization()
-  e9_complete_training_example()
+  # e9_complete_training_example()
+  # e10_create_a_raw_aritficial_neuron()
+  e11_training_a_single_neuron()
+
+
+def e11_training_a_single_neuron():
+  """
+  IMPORTANT: Modify your code to use `sigmoid` instead of `tanh`
+  """
+
+  # Input data
+  X = [
+    [1, 0, 0],
+    [0, 0, 0],
+    [1, 1, 0],
+    [1, 0, 1],
+    [0, 1, 0],
+    [0, 0, 1],
+    [1, 1, 1],
+    [0, 1, 1],
+  ]
+
+  # Expected outputs
+  Y = [0, 0, 0, 0, 1, 1, 1, 1]
+
+  # Building network
+  positron = MLP(3, [1])
+
+  # Train the network
+  positron.train(X, Y, 300, 0.1)
+
+  print("\nRESULTS:\n")
+
+  # Test the network
+  results = positron.predict(X)
+
+  for result in results:
+    print(result)
 
 def e9_complete_training_example():
   # Input data
@@ -186,7 +223,30 @@ def e2_create_a_raw_aritficial_neuron():
   # Visualize computational graph
   graph = generate_computation_graph_from_node(a, 'TB')
   draw_computation_graph(graph)
-  
+
+
+def e10_create_a_raw_aritficial_neuron():
+  # Inputs x1, x2
+  x1 = Value(2.0, 'x1')
+  x2 = Value(0.0, 'x2')
+
+  # Weights
+  w1 = Value(-3.0, 'w1')
+  w2 = Value(1.0, 'w2')
+
+  # Bias of the neuron
+  b = Value(6.8813735870195432, 'b') # The reason of the large number is to allow nice values
+
+  # Forward propagation
+  z = label(x1 * w1 + x2 * w2 + b, 'z')
+  a = label(z.tanh(), 'a') # Activation function
+
+  a.backward()
+
+  # Visualize computational graph
+  graph = generate_computation_graph_from_node(a, 'TB')
+  draw_computation_graph(graph)
+
 
 def e1_show_basics_of_value_operations():
   # Form computation
